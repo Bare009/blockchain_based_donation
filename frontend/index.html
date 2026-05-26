@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Donation Tracker</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Source+Sans+3:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="page">
+			<header class="site-header">
+				<div>
+					<p class="eyebrow">Blockchain Donation Tracker</p>
+					<h1 id="campaign-title">Campaign</h1>
+					<p id="campaign-description" class="subtitle"></p>
+				</div>
+				<div class="wallet-card">
+					<div>
+						<span class="label">Connected wallet</span>
+						<p id="wallet-address" class="wallet-address">Not connected</p>
+					</div>
+					<button id="connect-wallet" class="btn primary">Connect Wallet</button>
+				</div>
+			</header>
+
+			<section class="grid">
+				<div class="card">
+					<h2>Campaign Overview</h2>
+					<div class="stats">
+						<div>
+							<span class="label">Target</span>
+							<p id="campaign-target">--</p>
+						</div>
+						<div>
+							<span class="label">Total donated</span>
+							<p id="total-donated">--</p>
+						</div>
+						<div>
+							<span class="label">Total released</span>
+							<p id="total-released">--</p>
+						</div>
+						<div>
+							<span class="label">Contract balance</span>
+							<p id="contract-balance">--</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="card">
+					<h2>Donate</h2>
+					<div class="donate-row">
+						<input
+							id="donation-amount"
+							type="number"
+							min="0"
+							step="0.01"
+							placeholder="Amount in ETH"
+						/>
+						<button id="donate-btn" class="btn primary">Donate</button>
+					</div>
+					<p id="status-message" class="status-message"></p>
+				</div>
+			</section>
+
+			<section class="card">
+				<h2>Milestone Tracker</h2>
+				<div id="milestone-grid" class="milestone-grid"></div>
+			</section>
+
+			<section class="grid">
+				<div class="card">
+					<h2>Donation History</h2>
+					<div class="table-wrapper">
+						<table>
+							<thead>
+								<tr>
+									<th>Donor</th>
+									<th>Amount</th>
+									<th>Time</th>
+								</tr>
+							</thead>
+							<tbody id="donation-history"></tbody>
+						</table>
+					</div>
+				</div>
+				<div class="card">
+					<h2>Withdrawal Log</h2>
+					<div class="table-wrapper">
+						<table>
+							<thead>
+								<tr>
+									<th>Milestone</th>
+									<th>Amount</th>
+									<th>Time</th>
+								</tr>
+							</thead>
+							<tbody id="withdrawal-history"></tbody>
+						</table>
+					</div>
+				</div>
+			</section>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/ethers@6.16.0/dist/ethers.umd.min.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>

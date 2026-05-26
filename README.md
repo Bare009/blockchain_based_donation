@@ -1,57 +1,94 @@
-# Sample Hardhat 3 Beta Project (`mocha` and `ethers`)
+# Blockchain Donation Tracker
 
-This project showcases a Hardhat 3 Beta project using `mocha` for tests and the `ethers` library for Ethereum interactions.
+A decentralized donation tracking app with milestone-based fund release.
 
-To learn more about the Hardhat 3 Beta, please visit the [Getting Started guide](https://hardhat.org/docs/getting-started#getting-started-with-hardhat-3). To share your feedback, join our [Hardhat 3 Beta](https://hardhat.org/hardhat3-beta-telegram-group) Telegram group or [open an issue](https://github.com/NomicFoundation/hardhat/issues/new) in our GitHub issue tracker.
+## Prerequisites
 
-## Project Overview
+- Node.js 18+ and npm
+- MetaMask browser extension
 
-This example project includes:
+## Setup
 
-- A simple Hardhat configuration file.
-- Foundry-compatible Solidity unit tests.
-- TypeScript integration tests using `mocha` and ethers.js
-- Examples demonstrating how to connect to different types of networks, including locally simulating OP mainnet.
+1) Install dependencies
 
-## Usage
+```shell
+npm install
+```
 
-### Running Tests
+2) Compile the contract
 
-To run all the tests in the project, execute the following command:
+```shell
+npx hardhat compile
+```
+
+3) Copy the ABI to the frontend
+
+```shell
+node scripts/copy-abi.js
+```
+
+## Local Chain + Wallet Setup (Manual)
+
+1) Start the local Hardhat node (keep this running)
+
+```shell
+npx hardhat node
+```
+
+2) Import accounts into MetaMask
+
+From the Hardhat node output, import these private keys:
+
+- Account 0 = Admin
+- Account 1 = Verifier
+- Account 2 = Donor
+
+3) Add the local network to MetaMask
+
+- Network name: Hardhat Local
+- RPC URL: http://127.0.0.1:8545
+- Chain ID: 31337
+- Currency symbol: ETH
+
+## Deploy the Contract
+
+In a second terminal (leave the node running):
+
+```shell
+npx hardhat run scripts/deploy.js --network localhost
+```
+
+This writes the deployed address to `frontend/contract-address.json`.
+
+## Run the Frontend
+
+Serve the frontend over HTTP (MetaMask requires http/https):
+
+```shell
+npx http-server frontend -p 3000
+```
+
+Open http://localhost:3000 and click "Connect Wallet".
+
+## Running Tests
 
 ```shell
 npx hardhat test
 ```
 
-You can also selectively run the Solidity or `mocha` tests:
+## Demo Reset (Fresh State)
 
-```shell
-npx hardhat test solidity
-npx hardhat test mocha
-```
+If totals look incorrect, you are likely pointing at an old deployment.
 
-### Make a deployment to Sepolia
+1) Stop the Hardhat node
+2) Start it again: `npx hardhat node`
+3) Redeploy: `npx hardhat run scripts/deploy.js --network localhost`
+4) Refresh the browser
 
-This project includes an example Ignition module to deploy the contract. You can deploy this module to a locally simulated chain or to Sepolia.
+## Project Structure
 
-To run the deployment to a local chain:
-
-```shell
-npx hardhat ignition deploy ignition/modules/Counter.ts
-```
-
-To run the deployment to Sepolia, you need an account with funds to send the transaction. The provided Hardhat configuration includes a Configuration Variable called `SEPOLIA_PRIVATE_KEY`, which you can use to set the private key of the account you want to use.
-
-You can set the `SEPOLIA_PRIVATE_KEY` variable using the `hardhat-keystore` plugin or by setting it as an environment variable.
-
-To set the `SEPOLIA_PRIVATE_KEY` config variable using `hardhat-keystore`:
-
-```shell
-npx hardhat keystore set SEPOLIA_PRIVATE_KEY
-```
-
-After setting the variable, you can run the deployment with the Sepolia network:
-
-```shell
-npx hardhat ignition deploy --network sepolia ignition/modules/Counter.ts
-```
+- `contracts/DonationTracker.sol` - Smart contract
+- `scripts/deploy.js` - Deployment script
+- `scripts/copy-abi.js` - ABI copy helper
+- `test/DonationTracker.test.js` - Contract tests
+- `frontend/` - HTML/CSS/JS frontend

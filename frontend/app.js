@@ -186,23 +186,27 @@ async function loadContractData() {
 
 async function renderDonations() {
 	const donations = await contract.getDonations();
+	const donationList = Array.from(donations || []);
 	elements.donationHistory.innerHTML = "";
 
-	if (donations.length === 0) {
+	if (donationList.length === 0) {
 		elements.donationHistory.innerHTML =
 			"<tr><td colspan=\"3\">No donations yet.</td></tr>";
 		return;
 	}
 
-	donations
+	donationList
 		.slice()
 		.reverse()
 		.forEach((donation) => {
 			const row = document.createElement("tr");
+			const donor = donation.donor ?? donation[0];
+			const amount = donation.amount ?? donation[1];
+			const timestamp = donation.timestamp ?? donation[2];
 			row.innerHTML = `
-				<td>${formatAddress(donation.donor)}</td>
-				<td>${formatEth(donation.amount)}</td>
-				<td>${formatTime(donation.timestamp)}</td>
+				<td>${formatAddress(donor)}</td>
+				<td>${formatEth(amount)}</td>
+				<td>${formatTime(timestamp)}</td>
 			`;
 			elements.donationHistory.appendChild(row);
 		});
@@ -210,25 +214,30 @@ async function renderDonations() {
 
 async function renderWithdrawals() {
 	const withdrawals = await contract.getWithdrawals();
+	const withdrawalList = Array.from(withdrawals || []);
 	elements.withdrawalHistory.innerHTML = "";
 
-	if (withdrawals.length === 0) {
+	if (withdrawalList.length === 0) {
 		elements.withdrawalHistory.innerHTML =
 			"<tr><td colspan=\"3\">No withdrawals yet.</td></tr>";
 		return;
 	}
 
-	withdrawals
+	withdrawalList
 		.slice()
 		.reverse()
 		.forEach((withdrawal) => {
 			const row = document.createElement("tr");
-			const milestoneName = milestonesCache[Number(withdrawal.milestoneIndex)]
+			const milestoneIndex =
+				withdrawal.milestoneIndex ?? withdrawal[0] ?? 0;
+			const amount = withdrawal.amount ?? withdrawal[1];
+			const timestamp = withdrawal.timestamp ?? withdrawal[2];
+			const milestoneName = milestonesCache[Number(milestoneIndex)]
 				?.name;
 			row.innerHTML = `
-				<td>${milestoneName || `Milestone ${withdrawal.milestoneIndex}`}</td>
-				<td>${formatEth(withdrawal.amount)}</td>
-				<td>${formatTime(withdrawal.timestamp)}</td>
+				<td>${milestoneName || `Milestone ${milestoneIndex}`}</td>
+				<td>${formatEth(amount)}</td>
+				<td>${formatTime(timestamp)}</td>
 			`;
 			elements.withdrawalHistory.appendChild(row);
 		});
